@@ -42,6 +42,8 @@ def main(argv=None, save_main_session=True):
     known_args, pipeline_args = parser.parse_known_args(argv)
     pipeline_options = PipelineOptions(pipeline_args)
     pipeline_options.view_as(SetupOptions).save_main_session = save_main_session 
+    print("Critical schema path:", CRITICAL_AVRO_SCHEMA_PATH)
+    print("File exists:", os.path.exists(CRITICAL_AVRO_SCHEMA_PATH))
 
     # Cargar esquemas Avro
     critical_schema = fastavro.schema.load_schema(CRITICAL_AVRO_SCHEMA_PATH)

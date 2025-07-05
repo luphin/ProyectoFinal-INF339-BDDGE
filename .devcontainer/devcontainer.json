@@ -3,7 +3,7 @@
 {
 	"name": "INF339",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
+	"service": "ws-a-app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.

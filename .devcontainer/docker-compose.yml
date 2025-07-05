@@ -1,11 +1,11 @@
-version: "1"
+version: "2"
 
 networks:
   app-tier:
     driver: bridge
 
 services:
-  app:
+  ws-a-app:
     image: 'mcr.microsoft.com/devcontainers/base:bookworm'
     volumes:
       # Forwards the local Docker socket to the container.
@@ -20,7 +20,7 @@ services:
       - app-tier
 
   # https://github.com/bitnami/containers/tree/main/bitnami/postgresql
-  postgresql:
+  ws-a-postgresql:
     image: 'bitnami/postgresql:latest'
     ports:
       - '5432:5432'
@@ -34,17 +34,17 @@ services:
     networks:
       - app-tier
 
-  pgadmin:
+  ws-a-pgadmin:
     image: 'dpage/pgadmin4:latest'
     ports:
-      - "8888:80"
+      - "8082:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
       PGADMIN_DEFAULT_PASSWORD: strong-password
     networks:
       - app-tier
 
-  minio:
+  ws-a-minio:
     image: 'bitnami/minio:latest'
     ports:
       - '9000:9000'
@@ -56,7 +56,7 @@ services:
       - app-tier
 
   #https://github.com/bitnami/containers/tree/main/bitnami/redis
-  redis:
+  ws-a-redis:
     image: bitnami/redis:7.4
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -67,7 +67,7 @@ services:
     networks:
       - app-tier
 
-  redis-insight:
+  ws-a-redis-insight:
     image: redis/redisinsight:latest
     restart: always
     ports:
@@ -76,10 +76,10 @@ services:
       - app-tier
 
   # https://github.com/conduktor/kafka-stack-docker-compose/blob/master/zk-single-kafka-single.yml
-  zookeeper:
+  ws-a-zookeeper:
     image: confluentinc/cp-zookeeper:7.8.0
     hostname: zookeeper
-    container_name: zookeeper
+    container_name: ws-a-zookeeper
     ports:
       - "2181:2181"
     networks:
@@ -89,10 +89,10 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: zookeeper:2888:3888
 
-  kafka:
+  ws-a-kafka:
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka
-    container_name: kafka
+    container_name: ws-a-kafka
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -114,17 +114,17 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     depends_on:
-      - zookeeper
+      - ws-a-zookeeper
 
   #https://github.com/bitnami/containers/tree/main/bitnami/kafka
   #https://docs.docker.com/guides/kafka/
 
   #https://github.com/provectus/kafka-ui/blob/master/documentation/compose/DOCKER_COMPOSE.md
-  kafka-ui:
-    container_name: kafka-ui
+  ws-a-kafka-ui:
+    container_name: ws-a-kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
-      - 8080:8080
+      - 8083:8080
     networks:
       - app-tier
     environment:
@@ -134,7 +134,7 @@ services:
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
     depends_on:
-      - kafka
+      - ws-a-kafka
 volumes:
   postgresql_data:
     driver: local
