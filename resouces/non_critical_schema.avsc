@@ -1,0 +1,58 @@
+{
+  "doc": "Non-critical implement data",
+  "name": "NonCriticalData",
+  "namespace": "example.avro",
+  "type": "record",
+  "fields": [
+    {"name": "Implement_ID", "type": ["null", "string"]},
+    {"name": "Section_Control_Status", "type": [
+      "null",
+      {
+        "type": "record",
+        "name": "SectionControlStatus",
+        "fields": [
+          {"name": "Section1", "type": ["null", "string"]},
+          {"name": "Section2", "type": ["null", "string"]},
+          {"name": "Section3", "type": ["null", "string"]}
+        ]
+      }
+    ]},
+    {"name": "Flow_Rate_L_min", "type": ["null", "double"]},
+    {"name": "Seed_Rate_seeds_per_sq_m", "type": ["null", "double"]},
+    {"name": "Yield_Monitor_Data", "type": [
+      "null",
+      {
+        "type": "record",
+        "name": "YieldMonitorData",
+        "fields": [
+          {"name": "Yield_Moisture_Content_Percentage", "type": ["null", "double"]},
+          {"name": "Yield_Mass_Flow_Rate_kg_s", "type": ["null", "double"]},
+          {"name": "Yield_Rate_Per_Hectare_kg_ha", "type": ["null", "double"]}
+        ]
+      }
+    ]},
+    {"name": "Soil_Sensor_Data", "type": [
+      "null",
+      {
+        "type": "record",
+        "name": "SoilSensorData",
+        "fields": [
+          {"name": "Soil_Moisture_Percentage", "type": ["null", "double"]},
+          {"name": "Soil_Temperature_C", "type": ["null", "double"]},
+          {"name": "Soil_Nutrient_Levels", "type": [
+            "null",
+            {
+              "type": "record",
+              "name": "SoilNutrientLevels",
+              "fields": [
+                {"name": "Nitrogen_ppm", "type": ["null", "int"]},
+                {"name": "Phosphorus_ppm", "type": ["null", "int"]},
+                {"name": "Potassium_ppm", "type": ["null", "int"]}
+              ]
+            }
+          ]}
+        ]
+      }
+    ]}
+  ]
+}

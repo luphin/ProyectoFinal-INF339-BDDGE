@@ -1,0 +1,11 @@
+fastavro
+apache-beam
+pyarrow
+pandas
+python-snappy
+confluent-kafka
+minio
+boto3
+Faker
+redis
+psycopg

@@ -1,0 +1,80 @@
+{
+  "doc": "Critical vehicle data",
+  "name": "CriticalData",
+  "namespace": "example.avro",
+  "type": "record",
+  "fields": [
+    {"name": "Vehicle_ID", "type": ["null", "string"]},
+    {"name": "Timestamp", "type": ["null", "string"]},
+    {"name": "GPS_Coordinates", "type": [
+      "null",
+      {
+        "type": "record",
+        "name": "GPS",
+        "fields": [
+          {"name": "Latitude", "type": ["null", "double"]},
+          {"name": "Longitude", "type": ["null", "double"]}
+        ]
+      }
+    ]},
+    {"name": "Engine_RPM", "type": ["null", "int"]},
+    {"name": "Engine_Load_Percentage", "type": ["null", "int"]},
+    {"name": "Fuel_Level_Percentage", "type": ["null", "int"]},
+    {"name": "Fuel_Consumption_Rate_L_hr", "type": ["null", "double"]},
+    {"name": "Speed_km_h", "type": ["null", "double"]},
+    {"name": "Odometer_km", "type": ["null", "double"]},
+    {"name": "Operating_Hours", "type": ["null", "double"]},
+    {"name": "Hydraulic_Pressure_psi", "type": ["null", "int"]},
+    {"name": "Hydraulic_Fluid_Temp_C", "type": ["null", "int"]},
+    {"name": "Engine_Coolant_Temp_C", "type": ["null", "int"]},
+    {"name": "Battery_Voltage_V", "type": ["null", "double"]},
+    {"name": "Gear_Engaged", "type": ["null", "string"]},
+    {"name": "Accelerator_Pedal_Position_Percentage", "type": ["null", "int"]},
+    {"name": "Brake_Pedal_Position_Percentage", "type": ["null", "int"]},
+    {"name": "Diagnostic_Data", "type": [
+      "null",
+      {
+        "type": "record",
+        "name": "DiagnosticData",
+        "fields": [
+          {"name": "Error_Code", "type": ["null", "string"]},
+          {"name": "Warning_Lights", "type": [
+            "null",
+            {
+              "type": "record",
+              "name": "WarningLights",
+              "fields": [
+                {"name": "CheckEngineLight", "type": ["null", "string"]},
+                {"name": "LowOilPressure", "type": ["null", "string"]}
+              ]
+            }
+          ]},
+          {"name": "Component Temperatures_C", "type": [
+            "null",
+            {
+              "type": "record",
+              "name": "ComponentTemps",
+              "fields": [
+                {"name": "Engine", "type": ["null", "int"]},
+                {"name": "Transmission", "type": ["null", "int"]},
+                {"name": "HydraulicSystem", "type": ["null", "int"]}
+              ]
+            }
+          ]},
+          {"name": "Vibration", "type": [
+            "null",
+            {
+              "type": "record",
+              "name": "Vibration",
+              "fields": [
+                {"name": "Vibration_Index_X", "type": ["null", "double"]},
+                {"name": "Vibration_Index_Y", "type": ["null", "double"]},
+                {"name": "Vibration_Index_Z", "type": ["null", "double"]}
+              ]
+            }
+          ]}
+        ]
+      }
+    ]}
+  ]
+}
