@@ -39,6 +39,7 @@ with DAG(
     dag_id='generate_categorize_store_pipeline',
     default_args=default_args,
     description='Genera datos, los categoriza y guarda los no críticos',
+
     schedule_interval=None,
     catchup=False,
     tags=['example', 'data_pipeline'],
