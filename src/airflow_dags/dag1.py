@@ -22,22 +22,28 @@ def notify_kafka():
                              value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     message = {
         "event_type": "data_processing_completed",
-        "data_entity": "FanEngagement",
+        "data_entity": "TerramEarth",
         "status": "success",
-        "location": "/output/outuput.json",
+        "location": "/output/",
         "processed_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        "source_system": "dag1"
+        "source_system": "dag-streaming"
     }
-    producer.send("fan-engagement-topic", message)
+    producer.send("TerramEarth-notification", message)
     producer.flush()
 
 with DAG(
     "run_beam_dag",
-    description="A simple DAG to demonstrate basic Airflow functionality",
+    description=(
+        "Este DAG orquesta un flujo de procesamiento de datos que incluye la ejecución de un pipeline de Apache Beam, "
+        "la creación de un bucket S3 en MinIO y la notificación de finalización a través de Kafka. "
+        "El pipeline de Beam procesa datos utilizando el DirectRunner, los resultados se almacenan en el bucket S3 "
+        "y, al finalizar, se envía una notificación a un tópico de Kafka para informar sobre el éxito del proceso. "
+        "Este flujo es ejecutado diariamente y está diseñado para integrarse con sistemas de almacenamiento y mensajería modernos."
+    ),
     schedule="@daily",
     start_date=pendulum.datetime(2025, 6, 1, tz="UTC"),
     catchup=False,
-    tags=["example", "simple_dag"],
+    tags=["streaming", "TerramEarth"],
 ) as dag:
     first_step = EmptyOperator(task_id="First_step")
     start_python_pipeline_local_direct_runner = BeamRunPythonPipelineOperator(
@@ -50,18 +56,10 @@ with DAG(
         #py_system_site_packages=False,
     )
     bucket_name = "my-bucket"
-    bucket_creation = S3CreateBucketOperator(
-        task_id="create_bucket",
+    bucket_creation_and_to_local = S3CreateBucketOperator(
+        task_id="create_bucket_and_upload_to_local",
         aws_conn_id="minio-conn",
         bucket_name=bucket_name,
-    )
-    TEMP_FILE_PATH = "/workspaces/ProyectoFinal-INF339_BDDGE/output/ouput.json"
-    create_local_to_s3_job = LocalFilesystemToS3Operator(
-        task_id="create_local_to_s3_job",
-        aws_conn_id="minio-conn",
-        filename=TEMP_FILE_PATH,
-        dest_key=f"s3://{bucket_name}/s3_key/processed_data.parquet",
-        replace=True,
     )
     end_step = EmptyOperator(task_id="End_step")
 
@@ -70,4 +68,4 @@ with DAG(
         python_callable=notify_kafka
     )
 
-    first_step >> start_python_pipeline_local_direct_runner >> bucket_creation >> create_local_to_s3_job >> end_step >> notify
+    first_step >> start_python_pipeline_local_direct_runner >> bucket_creation_and_to_local >> end_step >> notify
